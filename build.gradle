@@ -1,0 +1,37 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '0.10.1'
+}
+
+group 'com.savvasdalkitsis'
+version '1.0-SNAPSHOT'
+
+pluginBundle {
+    website = 'https://github.com/savvasdalkitsis/'
+    vcsUrl = 'https://github.com/savvasdalkitsis/'
+    tags = ['module', 'graph', 'dependency']
+}
+
+gradlePlugin {
+    plugins {
+        moduleDepsGraph {
+            id = 'com.savvasdalkitsis.module-dependency-graph'
+            displayName = 'Generate module dependency graphs for your project'
+            description = 'This plugin adds a new task (graphModules) to your project which will create an image with the graph of your module dependency tree'
+            implementationClass = 'com.savvasdalkitsis.module.deps.graph.ModuleDependencyGraphPlugin'
+        }
+    }
+}
+
+publishing {
+    publications {
+        pluginPublication (MavenPublication) {
+            from        components.java
+            groupId     project.group
+            artifactId  "module-dependency-graph"
+            version     project.version
+        }
+    }
+}

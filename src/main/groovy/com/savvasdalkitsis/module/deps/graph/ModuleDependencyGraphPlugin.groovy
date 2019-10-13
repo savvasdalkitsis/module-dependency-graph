@@ -13,7 +13,7 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.task('graphModules') {
             doLast {
-                if (!hasGraphVizInstalled()) {
+                if (!hasGraphVizInstalled(project)) {
                     throw new IllegalStateException("You need GraphViz installed on your system to run this task. Please visit http://www.graphviz.org/ for more information on how to install it")
                 }
                 def graph = new StringBuilder()
@@ -61,11 +61,15 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
         }
     }
 
-    private static boolean hasGraphVizInstalled() {
+    private static boolean hasGraphVizInstalled(Project project) {
         try {
-            def process = Runtime.getRuntime().exec("dot --version")
-            return process.waitFor(2, TimeUnit.SECONDS) && process.exitValue() == 0
-        } catch (Exception ignored) {
+            def result = project.exec {
+                executable = "dot"
+                args "-V"
+                ignoreExitValue = true
+            }
+            return result.exitValue == 0
+        } catch (Exception e) {
             return false
         }
     }

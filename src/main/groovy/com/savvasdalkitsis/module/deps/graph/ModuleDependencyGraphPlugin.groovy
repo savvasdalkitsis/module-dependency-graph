@@ -3,9 +3,6 @@ package com.savvasdalkitsis.module.deps.graph
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
-import org.gradle.api.tasks.StopExecutionException
-
-import java.util.concurrent.TimeUnit
 
 class ModuleDependencyGraphPlugin implements Plugin<Project> {
 
@@ -13,9 +10,7 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.task('graphModules') {
             doLast {
-                if (!hasGraphVizInstalled(project)) {
-                    throw new IllegalStateException("You need GraphViz installed on your system to run this task. Please visit http://www.graphviz.org/ for more information on how to install it")
-                }
+                checkGraphVizIsInstalled(project)
                 def graph = new StringBuilder()
                 project.subprojects.each { module ->
                     def impl = getDependencies(module, "implementation")
@@ -61,16 +56,19 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
         }
     }
 
-    private static boolean hasGraphVizInstalled(Project project) {
+    private static checkGraphVizIsInstalled(Project project) {
+        def message = "You need GraphViz installed on your system to run this task. Please visit http://www.graphviz.org/ for more information on how to install it"
         try {
             def result = project.exec {
                 executable = "dot"
-                args "-V"
+                args = ["-V"]
                 ignoreExitValue = true
             }
-            return result.exitValue == 0
+            if (result.exitValue != 0) {
+                throw new IllegalStateException(message)
+            }
         } catch (Exception e) {
-            return false
+            throw new IllegalStateException(message, e)
         }
     }
 

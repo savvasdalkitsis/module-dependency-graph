@@ -6,11 +6,11 @@ plugins {
 }
 
 group 'com.savvasdalkitsis'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 pluginBundle {
     website = 'https://github.com/savvasdalkitsis/'
-    vcsUrl = 'https://github.com/savvasdalkitsis/'
+    vcsUrl = 'https://github.com/savvasdalkitsis/module-dependency-graph'
     tags = ['module', 'graph', 'dependency']
 }
 

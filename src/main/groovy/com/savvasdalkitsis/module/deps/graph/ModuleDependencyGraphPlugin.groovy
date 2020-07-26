@@ -93,9 +93,9 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
     }
 
     private static Set<Dependency> getDependencies(Project module, String configurationName) {
-        module.configurations.getByName(configurationName).dependencies.findAll {
+        module.configurations.findByName(configurationName)?.dependencies?.findAll {
             it.hasProperty("dependencyProject")
-        }
+        } ?: new HashSet<Dependency>()
     }
 
     private static def strip(Object o) {

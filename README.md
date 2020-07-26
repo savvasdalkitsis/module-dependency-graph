@@ -17,7 +17,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.savvasdalkitsis:module-dependency-graph:0.3"
+        classpath "com.savvasdalkitsis:module-dependency-graph:0.6"
     }
 }
 
@@ -27,7 +27,7 @@ apply plugin: "com.savvasdalkitsis.module-dependency-graph"
 `new syntax:`
 ```
 plugins {
-    id 'com.savvasdalkitsis.module-dependency-graph' version '0.3'
+    id 'com.savvasdalkitsis.module-dependency-graph' version '0.6'
 }
 ```
 
@@ -47,7 +47,7 @@ You must have graphviz installed on your system in order to use this plugin. For
 
 ## Issues
 
-The plugin currently only works on macOS since it is in the very early stages (as reflected by its version number). Multi-platform support will be coming soon along with many customization options.  
+The plugin currently only works on macOS and Linux since it is in the very early stages (as reflected by its version number). Multi-platform support will be coming soon along with many customization options.  
 
 License
 -------

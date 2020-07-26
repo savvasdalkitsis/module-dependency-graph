@@ -62,8 +62,9 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                     executable = "dot"
                     args("-o", outputFile.absolutePath, "-Tpng", dotFile.absolutePath)
                 }
+                def exec = System.properties['os.name'].toLowerCase().contains("mac") ? "open" : "xdg-open"
                 project.exec {
-                    executable = "open"
+                    executable = exec
                     args(outputFile.absolutePath)
                 }
             }

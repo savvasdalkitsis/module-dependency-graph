@@ -40,6 +40,21 @@ From the command line, simply run:
 
 This will create a png of the dependency graph of your modules and open the image
 
+### Specify file locations
+
+You can specify where the dot file and output png get created by specifying the following properties:
+
+```bash
+./gradlew graphModules -PdotFilePath={ABSOLUTE_PATH_TO_DOT_FILE} -PgraphOutputPngPath={ABSOLUTE_PATH_TO_PNG_FILE}      
+```
+
+or in the `gradle.properties` file:
+
+```
+dotFilePath={ABSOLUTE_PATH_TO_DOT_FILE}
+graphOutputPngPath={ABSOLUTE_PATH_TO_PNG_FILE}
+```
+
 ## Requirements
 
 You must have graphviz installed on your system in order to use this plugin. For more information on how to install it visit http://www.graphviz.org/

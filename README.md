@@ -12,7 +12,7 @@ Apply the gradle plugin on your root `build.gradle` file:
 
 ```
 plugins {
-    id 'com.savvasdalkitsis.module-dependency-graph' version '0.6'
+    id 'com.savvasdalkitsis.module-dependency-graph' version '0.7'
 }
 ```
 
@@ -23,7 +23,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.savvasdalkitsis:module-dependency-graph:0.6"
+        classpath "com.savvasdalkitsis:module-dependency-graph:0.7"
     }
 }
 

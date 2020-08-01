@@ -10,7 +10,13 @@ For example, this is the module graph of the Android project [GameFrame](https:/
 
 Apply the gradle plugin on your root `build.gradle` file:
 
-`old syntax:`
+```
+plugins {
+    id 'com.savvasdalkitsis.module-dependency-graph' version '0.6'
+}
+```
+
+`legacy syntax:`
 ```gradle
 buildscript {
     repositories {
@@ -22,13 +28,6 @@ buildscript {
 }
 
 apply plugin: "com.savvasdalkitsis.module-dependency-graph"
-```
-
-`new syntax:`
-```
-plugins {
-    id 'com.savvasdalkitsis.module-dependency-graph' version '0.6'
-}
 ```
 
 ## Usage

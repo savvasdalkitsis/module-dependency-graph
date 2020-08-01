@@ -49,23 +49,31 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                         graph [fontsize = 10]
                         node [fontsize = 10]
                         edge [fontsize = 10]
-                        module -> dependency  [color=red, label="api"]
+                        module -> dependency [color=red, label="api"]
                         module -> dependency [color=black, label="implementation"]
                         module -> dependency [color=green, label="compile"]
                     }
                 }
                 """.stripIndent()
                 def dotFile = File.createTempFile("module_graph", ".dot")
-                def outputFile = File.createTempFile("module_graph", ".png")
+                if (project.hasProperty('dotFilePath')) {
+                    dotFile = new File(project.property('dotFilePath'))
+                    dotFile.createNewFile()
+                }
+                def graphOutputPng = File.createTempFile("module_graph", ".png")
+                if (project.hasProperty('graphOutputPngPath')) {
+                    graphOutputPng = new File(project.property('graphOutputPngPath'))
+                    graphOutputPng.createNewFile()
+                }
                 dotFile.write(dot)
                 project.exec {
                     executable = "dot"
-                    args("-o", outputFile.absolutePath, "-Tpng", dotFile.absolutePath)
+                    args("-o", graphOutputPng.absolutePath, "-Tpng", dotFile.absolutePath)
                 }
                 def exec = System.properties['os.name'].toLowerCase().contains("mac") ? "open" : "xdg-open"
                 project.exec {
                     executable = exec
-                    args(outputFile.absolutePath)
+                    args(graphOutputPng.absolutePath)
                 }
             }
         }

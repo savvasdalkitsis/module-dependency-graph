@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.savvasdalkitsis'
-version '0.7'
+version '0.8'
 
 pluginBundle {
     website = 'https://github.com/savvasdalkitsis/'

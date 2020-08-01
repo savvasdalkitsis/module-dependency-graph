@@ -12,7 +12,7 @@ Apply the gradle plugin on your root `build.gradle` file:
 
 ```
 plugins {
-    id 'com.savvasdalkitsis.module-dependency-graph' version '0.7'
+    id 'com.savvasdalkitsis.module-dependency-graph' version '0.8'
 }
 ```
 
@@ -23,7 +23,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.savvasdalkitsis:module-dependency-graph:0.7"
+        classpath "com.savvasdalkitsis:module-dependency-graph:0.8"
     }
 }
 
@@ -42,17 +42,32 @@ This will create a png of the dependency graph of your modules and open the imag
 
 ### Specify file locations
 
-You can specify where the dot file and output png get created by specifying the following properties:
+You can specify where the dot file and output file get created by specifying the following properties:
 
 ```bash
-./gradlew graphModules -PdotFilePath={ABSOLUTE_PATH_TO_DOT_FILE} -PgraphOutputPngPath={ABSOLUTE_PATH_TO_PNG_FILE}      
+./gradlew graphModules -PdotFilePath={ABSOLUTE_PATH_TO_DOT_FILE} -PgraphOutputFilePath={ABSOLUTE_PATH_TO_OUTPUT_FILE}      
 ```
 
 or in the `gradle.properties` file:
 
 ```
 dotFilePath={ABSOLUTE_PATH_TO_DOT_FILE}
-graphOutputPngPath={ABSOLUTE_PATH_TO_PNG_FILE}
+graphOutputFilePath={ABSOLUTE_PATH_TO_OUTPUT_FILE}
+```
+
+### Support for svg and other formats
+
+Apart from `png`, which is the default format, this plugin has support for other formats, like `svg` and any
+other format that `graphviz` supports (can be found [here](https://www.graphviz.org/doc/info/output.html)):
+
+```bash
+./gradlew graphModules -PgraphOutputFormat=svg      
+```
+
+or in the `gradle.properties` file:
+
+```
+graphOutputFormat=svg
 ```
 
 ## Requirements

@@ -60,20 +60,24 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                     dotFile = new File(project.property('dotFilePath'))
                     dotFile.createNewFile()
                 }
-                def graphOutputPng = File.createTempFile("module_graph", ".png")
-                if (project.hasProperty('graphOutputPngPath')) {
-                    graphOutputPng = new File(project.property('graphOutputPngPath'))
-                    graphOutputPng.createNewFile()
+                def graphOutputFormat = "png"
+                if (project.hasProperty('graphOutputFormat')) {
+                    graphOutputFormat = project.property('graphOutputFormat')
+                }
+                def graphOutputFile = File.createTempFile("module_graph", ".$graphOutputFormat")
+                if (project.hasProperty('graphOutputFilePath')) {
+                    graphOutputFile = new File(project.property('graphOutputFilePath'))
+                    graphOutputFile.createNewFile()
                 }
                 dotFile.write(dot)
                 project.exec {
                     executable = "dot"
-                    args("-o", graphOutputPng.absolutePath, "-Tpng", dotFile.absolutePath)
+                    args("-o", graphOutputFile.absolutePath, "-T$graphOutputFormat", dotFile.absolutePath)
                 }
                 def exec = System.properties['os.name'].toLowerCase().contains("mac") ? "open" : "xdg-open"
                 project.exec {
                     executable = exec
-                    args(graphOutputPng.absolutePath)
+                    args(graphOutputFile.absolutePath)
                 }
             }
         }

@@ -12,7 +12,7 @@ Apply the gradle plugin on your root `build.gradle` file:
 
 ```
 plugins {
-    id 'com.savvasdalkitsis.module-dependency-graph' version '0.8'
+    id 'com.savvasdalkitsis.module-dependency-graph' version '0.9'
 }
 ```
 
@@ -23,7 +23,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.savvasdalkitsis:module-dependency-graph:0.8"
+        classpath "com.savvasdalkitsis:module-dependency-graph:0.9"
     }
 }
 
@@ -68,6 +68,21 @@ or in the `gradle.properties` file:
 
 ```
 graphOutputFormat=svg
+```
+
+### Auto open output file
+
+By default, the generated graph will be opened using the system's default app for handling
+the specified format. If you don't want this to happen, you can specify the following parameter:
+
+```bash
+./gradlew graphModules -PautoOpenGraph=false      
+```
+
+or in the `gradle.properties` file:
+
+```
+autoOpenGraph=false
 ```
 
 ## Requirements

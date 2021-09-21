@@ -18,6 +18,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
 
+@SuppressWarnings('unused')
 class ModuleDependencyGraphPlugin implements Plugin<Project> {
 
     @Override
@@ -25,17 +26,18 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
         project.task('graphModules') {
             doLast {
                 checkGraphVizIsInstalled(project)
+
+                def filter = getFilter(project)
+                println("Using filter: $filter")
+
                 def graph = new StringBuilder()
                 project.subprojects.each { module ->
                     def impl = getDependencies(module, "implementation")
                     def api = getDependencies(module, "api")
                     def compile = getDependencies(module, "compile")
-                    if (impl.empty && api.empty && compile.empty) {
-                        graph.append("\t\t${strip(module)};").append("\n")
-                    }
-                    graphDeps(impl, module, "black", graph)
-                    graphDeps(api, module, "red", graph)
-                    graphDeps(compile, module, "green", graph)
+                    graphDeps(impl, module, "black", graph, filter)
+                    graphDeps(api, module, "red", graph, filter)
+                    graphDeps(compile, module, "green", graph, filter)
                 }
                 def dot = """
                 digraph modules {
@@ -57,7 +59,7 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                 """.stripIndent()
                 def dotFile = File.createTempFile("module_graph", ".dot")
                 if (project.hasProperty('dotFilePath')) {
-                    dotFile = new File(project.property('dotFilePath'))
+                    dotFile = new File(project.property('dotFilePath').toString())
                     dotFile.createNewFile()
                 }
                 def graphOutputFormat = "png"
@@ -66,12 +68,12 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                 }
                 def graphOutputFile = File.createTempFile("module_graph", ".$graphOutputFormat")
                 if (project.hasProperty('graphOutputFilePath')) {
-                    graphOutputFile = new File(project.property('graphOutputFilePath'))
+                    graphOutputFile = new File(project.property('graphOutputFilePath').toString())
                     graphOutputFile.createNewFile()
                 }
                 def autoOpenGraph = true
                 if (project.hasProperty('autoOpenGraph')) {
-                    autoOpenGraph = Boolean.parseBoolean(project.property('autoOpenGraph'))
+                    autoOpenGraph = Boolean.parseBoolean(project.property('autoOpenGraph').toString())
                 }
                 dotFile.write(dot)
                 project.exec {
@@ -92,6 +94,16 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
         }
     }
 
+    private static List<String> getFilter(Project project) {
+        if (project.hasProperty('graphFilter')) {
+            return project.property('graphFilter').toString()
+                    .split(",")
+                    .collect { it.trim() }
+        } else {
+            return new ArrayList<String>()
+        }
+    }
+
     private static checkGraphVizIsInstalled(Project project) {
         def message = "You need GraphViz installed on your system to run this task. Please visit http://www.graphviz.org/ for more information on how to install it"
         try {
@@ -108,9 +120,19 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
         }
     }
 
-    private static Set<Dependency> graphDeps(Set<Dependency> dependencies, Object module, String color, StringBuilder graph) {
+    private static Set<Dependency> graphDeps(
+            Set<Dependency> dependencies,
+            Object module,
+            String color,
+            StringBuilder graph,
+            List<String> filter
+    ) {
         dependencies.each { dep ->
-            graph.append("\t\t${strip(module)} -> ${strip(dep.dependencyProject)} [color = $color]").append("\n")
+            def dependant = strip(module)
+            def dependency = strip(dep.dependencyProject)
+            if (filter.isEmpty() || filter.contains(dependant) || filter.contains(dependency)) {
+                graph.append("\t\t\"$dependant\" -> \"$dependency\" [color = $color]").append("\n")
+            }
         }
     }
 
@@ -121,7 +143,6 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
     }
 
     private static def strip(Object o) {
-        o.toString().replaceAll("project ':", "\"").replaceAll("'", "\"")
+        o.toString().replaceAll("project ':", "").replaceAll("'", "")
     }
 }
-

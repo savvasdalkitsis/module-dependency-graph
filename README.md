@@ -40,6 +40,17 @@ From the command line, simply run:
 
 This will create a png of the dependency graph of your modules and open the image
 
+### Filtering
+
+You can specify a comma separated list of modules to include in the output. If this is 
+specified the graph will contain only these modules and their dependants and dependencies.
+This can be helpful when trying to clean up a really complicated dependency tree
+and you need to focus on only a part of it.
+
+```bash
+./gradlew graphModules -PgraphFilter=core,presentation:api,network
+```
+
 ### Specify file locations
 
 You can specify where the dot file and output file get created by specifying the following properties:

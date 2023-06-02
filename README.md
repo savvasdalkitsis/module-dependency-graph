@@ -96,6 +96,22 @@ or in the `gradle.properties` file:
 autoOpenGraph=false
 ```
 
+### Transform dot file
+
+By default, the command line tool `dot` will be used to transform an output defined in the
+Gradle property `graphOutputFormat`. If you don't want this to happen, 
+you can specify the following parameter:
+
+```bash
+./gradlew graphModules -PtransformDot=false      
+```
+
+or in the `gradle.properties` file:
+
+```
+transformDot=false
+```
+
 ## Requirements
 
 You must have graphviz installed on your system in order to use this plugin. For more information on how to install it visit http://www.graphviz.org/

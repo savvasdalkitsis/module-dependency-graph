@@ -76,14 +76,20 @@ class ModuleDependencyGraphPlugin implements Plugin<Project> {
                     autoOpenGraph = Boolean.parseBoolean(project.property('autoOpenGraph').toString())
                 }
                 dotFile.write(dot)
-                project.exec {
-                    executable = "dot"
-                    args("-o", graphOutputFile.absolutePath, "-T$graphOutputFormat", dotFile.absolutePath)
+                def transformDot = true
+                if (project.hasProperty('transformDot')) {
+                    transformDot = Boolean.parseBoolean(project.property('transformDot').toString())
                 }
-                println("Generaged dot file at: ${dotFile.absolutePath}")
-                println("Generaged output file at: ${graphOutputFile.absolutePath}")
+                if (transformDot) {
+                    project.exec {
+                        executable = "dot"
+                        args("-o", graphOutputFile.absolutePath, "-T$graphOutputFormat", dotFile.absolutePath)
+                    }
+                    println("Generated output file at: ${graphOutputFile.absolutePath}")
+                }
+                println("Generated dot file at: ${dotFile.absolutePath}")
 
-                if (autoOpenGraph) {
+                if (transformDot && autoOpenGraph) {
                     def exec = System.properties['os.name'].toLowerCase().contains("mac") ? "open" : "xdg-open"
                     project.exec {
                         executable = exec
